@@ -1,95 +1,43 @@
 import React from 'react';
-import { Row, Col, Icon, Menu, Button, Popover } from 'antd';
+import ScrollAnim from 'rc-scroll-anim';
+import { TweenOneGroup } from 'rc-tween-one';
 
-import { enquireScreen } from 'enquire-js';
+const { Link } = ScrollAnim;
 
-const LOGO_URL = 'https://gw.alipayobjects.com/zos/rmsportal/gVAKqIsuJCepKNbgbSwE.svg';
-
-class Header extends React.Component {
-  state = {
-    menuVisible: false,
-    menuMode: 'horizontal',
-  };
-
-  componentDidMount() {
-    enquireScreen((b) => {
-      this.setState({ menuMode: b ? 'inline' : 'horizontal' });
-    });
-  }
-
+export default class Header extends React.PureComponent {
+  getHeaderChildToRender = () => (
+    [
+      <Link className="logo" to="screen0" toHash={false} key="logo" />,
+      <nav key="nav">
+        {!this.props.isMobile && (
+          <ul>
+            <li><Link to="screen1" toHash={false}>特邀嘉宾</Link></li>
+            <li><Link to="screen2" toHash={false}>会议日程</Link></li>
+            <li><Link to="screen3" toHash={false}>地点</Link></li>
+            <li><Link to="screen4" toHash={false}>赞助商</Link></li>
+          </ul>)}
+      </nav>,
+    ]);
   render() {
-    const { menuMode, menuVisible } = this.state;
-
-    const menu = (
-      <Menu mode={menuMode} id="nav" key="nav">
-        <Menu.Item key="home">
-          <a>首页</a>
-        </Menu.Item>
-        <Menu.Item key="docs">
-          <a><span>文档</span></a>
-        </Menu.Item>
-        <Menu.Item key="components">
-          <a>组件</a>
-        </Menu.Item>
-        {
-          menuMode === 'inline' && (
-            <Menu.Item key="preview">
-              <a target="_blank" href="http://preview.pro.ant.design/" rel="noopener noreferrer">
-                预览
-              </a>
-            </Menu.Item>
-          )
-        }
-      </Menu>
-    );
-
+    const { noTop, isMobile } = this.props;
+    const header = this.getHeaderChildToRender();
+    const headerFix = this.getHeaderChildToRender();
     return (
-      <div id="header" className="header">
-        {menuMode === 'inline' ? (
-          <Popover
-            overlayClassName="popover-menu"
-            placement="bottomRight"
-            content={menu}
-            trigger="click"
-            visible={menuVisible}
-            arrowPointAtCenter
-            onVisibleChange={this.onMenuVisibleChange}
-          >
-            <Icon
-              className="nav-phone-icon"
-              type="menu"
-              onClick={this.handleShowMenu}
-            />
-          </Popover>
-        ) : null}
-        <Row>
-          <Col xxl={4} xl={5} lg={8} md={8} sm={24} xs={24}>
-            <div id="logo" to="/">
-              <img src={LOGO_URL} alt="logo" />
-              <span>ANT DESIGN PRO</span>
-            </div>
-          </Col>
-          <Col xxl={20} xl={19} lg={16} md={16} sm={0} xs={0}>
-            <div className="header-meta">
-              <div id="preview">
-                <a
-                  id="preview-button"
-                  target="_blank"
-                  href="http://preview.pro.ant.design"
-                  rel="noopener noreferrer"
-                >
-                  <Button icon="eye-o">
-                    预览
-                  </Button>
-                </a>
-              </div>
-              {menuMode === 'horizontal' ? <div id="menu">{menu}</div> : null}
-            </div>
-          </Col>
-        </Row>
-      </div>
+      <header key="nav" >
+        <div className="site-top">
+          {header}
+        </div>
+        <TweenOneGroup
+          component=""
+          enter={{ y: -80, opacity: 0, type: 'from' }}
+          leave={{ y: -80, opacity: 0 }}
+        >
+          {!noTop && !isMobile && (
+            <div className="site-top no-banner" key="nav">
+              {headerFix}
+            </div>)}
+        </TweenOneGroup>
+      </header>
     );
   }
 }
-
-export default Header;

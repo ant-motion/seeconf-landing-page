@@ -1,64 +1,76 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import GitHubButton from 'react-github-button';
-import QueueAnim from 'rc-queue-anim';
-import TweenOne from 'rc-tween-one';
 import { Button } from 'antd';
-import BannerSVGAnim from './component/BannerSVGAnim';
+import TweenOne from 'rc-tween-one';
+import BannerBg from './BannerBg';
+import * as pageData from './data';
 
-function Banner(props) {
-  return (
-    <div className="banner-wrapper">
-      {props.isMobile && (
-        <TweenOne animation={{ opacity: 1 }} className="banner-image-wrapper">
-          <div className="home-banner-image">
-            <img
-              alt="banner"
-              src="https://gw.alipayobjects.com/zos/rmsportal/rqKQOpnMxeJKngVvulsF.svg"
-              width="100%"
-            />
-          </div>
-        </TweenOne>
-      )}
-      <QueueAnim className="banner-title-wrapper" type={props.isMobile ? 'bottom' : 'right'}>
-        <div key="line" className="title-line-wrapper">
-          <div
-            className="title-line"
-            style={{ transform: 'translateX(-64px)' }}
-          />
-        </div>
-        <h1 key="h1">ANT DESIGN PRO</h1>
-        <p key="content">
-          开箱即用的中台前端/设计解决方案
-        </p>
-        <div key="button" className="button-wrapper">
-          <a href="http://preview.pro.ant.design" target="_blank" rel="noopener noreferrer">
-            <Button type="primary">
-              预览
-            </Button>
-          </a>
-          <Button style={{ margin: '0 16px' }} type="primary" ghost>
-            开始使用
-          </Button>
-          <GitHubButton
-            key="github-button"
-            type="stargazers"
-            namespace="ant-design"
-            repo="ant-design-pro"
-          />
-        </div>
-      </QueueAnim>
-      {!props.isMobile && (
-        <TweenOne animation={{ opacity: 1 }} className="banner-image-wrapper">
-          <BannerSVGAnim />
-        </TweenOne>
-      )}
-    </div>
-  );
-}
+const { banner, button } = pageData;
 
-Banner.propTypes = {
-  isMobile: PropTypes.bool.isRequired,
+const yAnim = {
+  y: 30, opacity: 0, type: 'from', ease: 'easeOutCubic', duration: 300,
 };
 
-export default Banner;
+export default class Banner extends React.PureComponent {
+  static propTypes = {
+    className: PropTypes.string,
+    isMobile: PropTypes.bool,
+    // showModal: PropTypes.func,
+  };
+  static defaultProps = {
+    className: 'banner',
+  }
+  state = {
+    // showBg: false,
+  }
+  onEnd = () => {
+    /* this.setState({
+      showBg: true,
+    }); */
+  }
+  getTextToRender = (text, delay) => {
+    const textArray = text.split('');
+    return textArray.map((t, i) => (
+      <TweenOne
+        key={i.toString()}
+        component="span"
+        animation={{
+          y: 60, opacity: 0, type: 'from', ease: 'easeOutQuint', delay: delay + (i * 50), duration: 450,
+        }}
+      >
+        {t === ' ' ? <span>&nbsp;</span> : t}
+      </TweenOne>
+    ));
+  }
+  render() {
+    const {
+      className, isMobile, // showModal,
+    } = this.props;
+    const titleChild = this.getTextToRender(isMobile ? 'SEE Conf' : banner.title, 600);
+    return (
+      <div className={className}>
+        <BannerBg />
+        <div className={`${className}-content`} >
+          <TweenOne component="p" animation={{ ...yAnim, delay: 500 }} title="EXPERIENCE & ENGINEERING" className="en-name">
+            {isMobile ? banner.title : banner.enName}
+          </TweenOne>
+          <TweenOne component="h1" animation={{ ...yAnim, delay: 600 }}>
+            {titleChild}
+          </TweenOne>
+          <TweenOne component="p" animation={{ ...yAnim, delay: 700 }} className="cn-name">
+            {banner.cnName}
+          </TweenOne>
+          <TweenOne animation={{ ...yAnim, delay: 800 }} className="extra" key="text">
+            {banner.time}
+          </TweenOne>
+          <TweenOne animation={[{ ...yAnim, delay: 900, pointerEvents: 'none' }, { pointerEvents: '', duration: 0 }]} className="home-button" key="home-button">
+            <Button type="primary">
+              {/* button onClick={showModal} */}
+              <a>{button}</a>
+            </Button>
+          </TweenOne>
+        </div>
+      </div>
+    );
+  }
+}

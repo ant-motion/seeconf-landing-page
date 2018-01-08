@@ -1,0 +1,35 @@
+@import './default';
+body {
+  font-family: @font-family;
+  line-height: 1.5;
+  color: @text-color;
+  font-size: @font-size-base;
+  background: #fff;
+  transition: background 1s cubic-bezier(0.075, 0.82, 0.165, 1);
+  -webkit-font-smoothing: antialiased;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+.text-center {
+  text-align: center!important;
+}
+
+.home-button {
+  text-align: center;
+  .ant-btn {
+    width: 180px/* 132px */;
+    height: 42px;
+    line-height: 42px;
+    border-radius: 21px;
+    font-size: 14px;
+    font-family: @font-family;
+  }
+}
+
+img {
+  display: block;
+}
