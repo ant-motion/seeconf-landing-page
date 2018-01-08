@@ -1,6 +1,6 @@
 ### ant v
 
-ant v 里的 landing page. 
+seeconf 报名页面. 
 
 脚手架使用的是： [antd-init](https://github.com/ant-design/antd-init);
 
@@ -8,7 +8,7 @@ ant v 里的 landing page.
 
 https://antv.alipay.com/zh-cn/index.html
 
-https://ant-motion.github.io/ant-v-landing-page/
+https://ant-motion.github.io/seeconf-landing-page/
 
 
 ## install
